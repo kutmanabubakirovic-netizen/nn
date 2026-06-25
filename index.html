@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Премиум каталог авто и мото</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: '#E53E3E',
+              surface: '#1C1C24',
+              accent: '#FB923C'
+            },
+            boxShadow: {
+              glow: '0 24px 80px rgba(229, 62, 62, 0.16)'
+            }
+          }
+        }
+      };
+    </script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="min-h-screen bg-[#121214] text-slate-100 font-sans">
+    <div class="max-w-[1480px] mx-auto px-4 py-6">
+      <header class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <span class="inline-block rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-xs uppercase tracking-[0.35em] text-slate-400">
+            Elite Garage
+          </span>
+          <h1 class="mt-4 text-4xl font-semibold leading-tight text-white sm:text-5xl">
+            Каталог элитного авто- и мототранспорта
+          </h1>
+          <p class="mt-3 max-w-2xl text-slate-400">
+            Продвинутый фильтр, умная пагинация, премиальные карточки и модальное окно для полного обзора каждого экземпляра.
+          </p>
+        </div>
+        <div class="flex items-center gap-4 rounded-3xl border border-slate-800 bg-slate-900/70 px-5 py-4 shadow-glow backdrop-blur-sm">
+          <div class="flex flex-col text-right">
+            <span class="text-xs uppercase tracking-[0.35em] text-slate-500">Гараж</span>
+            <span id="garageCount" class="text-3xl font-semibold text-brand">0</span>
+          </div>
+          <div class="h-14 w-14 rounded-3xl bg-gradient-to-br from-brand/20 to-orange-500/10 p-3 text-brand">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-full w-full">
+              <path d="M6 6h14l-1.5 7H8.5L7 6zm2.5 10a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM7 4V2h2v2h6V2h2v2h1.5a.5.5 0 0 1 .5.5V7h-1l-1.5 7h-9L5 7H4V4.5a.5.5 0 0 1 .5-.5H7z" />
+            </svg>
+          </div>
+        </div>
+      </header>
+
+      <section class="mt-8 grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
+        <div class="space-y-6 rounded-3xl border border-slate-800 bg-slate-900/75 p-6 shadow-glow backdrop-blur-sm">
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-300">Поиск по названию</span>
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Например, Yamaha R1"
+                class="w-full rounded-3xl border border-slate-800 bg-slate-950/90 px-4 py-3 text-slate-100 outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
+              />
+            </label>
+
+            <div class="space-y-2">
+              <span class="block text-sm font-medium text-slate-300">Раздел</span>
+              <div class="flex flex-wrap gap-3">
+                <button data-type="all" class="tab-button rounded-full border border-slate-700 bg-slate-900/90 px-5 py-3 text-sm text-slate-200 transition hover:border-brand hover:text-white">
+                  Все
+                </button>
+                <button data-type="auto" class="tab-button rounded-full border border-slate-700 bg-slate-900/90 px-5 py-3 text-sm text-slate-200 transition hover:border-brand hover:text-white">
+                  Автомобили
+                </button>
+                <button data-type="moto" class="tab-button rounded-full border border-slate-700 bg-slate-900/90 px-5 py-3 text-sm text-slate-200 transition hover:border-brand hover:text-white">
+                  Мотоциклы
+                </button>
+                <button data-type="exclusive" class="tab-button rounded-full border border-slate-700 bg-slate-900/90 px-5 py-3 text-sm text-slate-200 transition hover:border-brand hover:text-white">
+                  Эксклюзив
+                </button>
+              </div>
+            </div>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-300">Сортировка</span>
+              <select id="sortSelect" class="w-full rounded-3xl border border-slate-800 bg-slate-950/90 px-4 py-3 text-slate-100 outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20">
+                <option value="priceAsc">Сначала дешевые</option>
+                <option value="priceDesc">Сначала дорогие</option>
+                <option value="yearDesc">По году выпуска</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="rounded-3xl border border-slate-800 bg-slate-950/80 p-5">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <p class="text-xs uppercase tracking-[0.35em] text-slate-500">Найдено</p>
+                <p class="mt-2 text-3xl font-semibold text-white" id="itemCount">0</p>
+              </div>
+              <div class="text-right text-sm text-slate-400">
+                <p class="font-medium text-slate-200">Показано на странице</p>
+                <p>до 12 карточек</p>
+              </div>
+            </div>
+            <p class="mt-5 text-sm leading-6 text-slate-400">
+              Готово для профессионального просмотра, сохранения в гараж и быстрой оценки каждого лота.
+            </p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-slate-800 bg-slate-900/75 p-6 shadow-glow backdrop-blur-sm">
+          <h2 class="text-xl font-semibold text-white">Выделенные категории</h2>
+          <p class="mt-3 text-slate-400">Стильная подборка для любителей JDM, неоклассики, суперкаров и спортивных мотоциклов.</p>
+          <div class="mt-6 grid gap-4">
+            <div class="rounded-3xl border border-slate-800 bg-slate-950/90 p-4">
+              <p class="text-xs uppercase tracking-[0.35em] text-brand">JDM</p>
+              <p class="mt-3 text-lg font-semibold text-white">Аутентичный тюнинг и ретро-спорт.</p>
+            </div>
+            <div class="rounded-3xl border border-slate-800 bg-slate-950/90 p-4">
+              <p class="text-xs uppercase tracking-[0.35em] text-brand">Неоклассика</p>
+              <p class="mt-3 text-lg font-semibold text-white">Иконические машины с обновленным характером.</p>
+            </div>
+            <div class="rounded-3xl border border-slate-800 bg-slate-950/90 p-4">
+              <p class="text-xs uppercase tracking-[0.35em] text-brand">Суперкары</p>
+              <p class="mt-3 text-lg font-semibold text-white">Мощь, скорость и коллекционное совершенство.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main class="mt-10 space-y-8">
+        <div class="rounded-3xl border border-slate-800 bg-slate-900/75 p-6 shadow-glow backdrop-blur-sm">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <span class="text-sm uppercase tracking-[0.35em] text-slate-500">Премиум сетка</span>
+              <h2 class="mt-3 text-2xl font-semibold text-white">Грид из транспортных карточек</h2>
+            </div>
+            <p class="max-w-xl text-sm leading-6 text-slate-400">
+              Быстрый рендер, адаптивное отображение и визуальные эффекты на уровне Middle/Senior frontend.
+            </p>
+          </div>
+        </div>
+
+        <div id="cardsGrid" class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3"></div>
+
+        <div id="pagination" class="flex flex-wrap items-center justify-center gap-3 rounded-3xl border border-slate-800 bg-slate-900/75 px-4 py-4 shadow-glow"></div>
+      </main>
+    </div>
+
+    <div id="detailModal" class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto px-4 py-10 backdrop-blur-sm modal-backdrop">
+      <div class="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/95 shadow-glow">
+        <button id="closeModal" class="absolute right-4 top-4 rounded-full border border-slate-700 bg-slate-900/90 p-3 text-slate-200 transition hover:bg-slate-800">
+          <span class="sr-only">Закрыть</span>
+          ✕
+        </button>
+        <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div class="relative overflow-hidden bg-slate-900">
+            <img id="modalImage" src="" alt="Preview" class="h-full w-full object-cover brightness-90" />
+          </div>
+          <div class="space-y-5 p-8">
+            <div class="space-y-2">
+              <span id="modalType" class="inline-flex rounded-full bg-brand/10 px-3 py-1 text-xs uppercase tracking-[0.35em] text-brand"></span>
+              <h3 id="modalName" class="text-3xl font-semibold text-white"></h3>
+              <p id="modalCategory" class="text-sm uppercase tracking-[0.35em] text-slate-500"></p>
+            </div>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div class="rounded-3xl bg-slate-900/90 p-4">
+                <p class="text-xs uppercase tracking-[0.35em] text-slate-500">Год</p>
+                <p id="modalYear" class="mt-2 text-2xl font-semibold text-white"></p>
+              </div>
+              <div class="rounded-3xl bg-slate-900/90 p-4">
+                <p class="text-xs uppercase tracking-[0.35em] text-slate-500">Цена</p>
+                <p id="modalPrice" class="mt-2 text-2xl font-semibold text-brand"></p>
+              </div>
+            </div>
+            <div class="rounded-3xl bg-slate-900/90 p-5 text-sm leading-7 text-slate-300">
+              <p class="font-medium text-white">Технические характеристики</p>
+              <ul class="mt-4 space-y-3">
+                <li><span class="text-slate-400">Мощность:</span> <span id="modalPower" class="font-medium text-white"></span></li>
+                <li><span class="text-slate-400">Объем двигателя:</span> <span id="modalEngine" class="font-medium text-white"></span></li>
+              </ul>
+            </div>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <button id="modalGarageButton" class="inline-flex items-center justify-center rounded-3xl bg-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-500">
+                Добавить в гараж
+              </button>
+              <p class="text-sm text-slate-400">Полная карточка модели для экспресс-анализа.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
